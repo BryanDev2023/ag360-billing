@@ -5,10 +5,11 @@ import {
   ValidatorConstraintInterface,
   ValidationArguments,
 } from 'class-validator';
+
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { Brand, BrandDocument } from '../entities/brand.entity';
+import { Brand, BrandDocument } from './entities-externas/brand.entity';
 
 @ValidatorConstraint({ name: 'BrandExists', async: true })
 @Injectable()

@@ -1,7 +1,6 @@
 import { Transform } from "class-transformer";
 import { IsArray, IsDate, IsDateString, IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID, ValidateIf } from "class-validator";
-import { BrandExists } from "../validators/brand-exists.validator";
-
+import { BrandExists } from "src/validators/brand-exists.validator";
 export class CreatePagoDto {
   @IsString()
   @BrandExists({ message: "El brandId proporcionado no existe en la colección brands" })
@@ -40,7 +39,9 @@ export class CreatePagoDto {
   @IsOptional()
   notas: string[];
 
-  @IsEnum(["completado", "cancelado", "pendiente"])
+  @IsEnum(["completado", "cancelado", "pendiente"], {
+    message: "status debe ser: 'completado', 'cancelado' o 'pendiente'"
+  })
   @IsNotEmpty({ message: "status es requerido" })
   status: string;
 

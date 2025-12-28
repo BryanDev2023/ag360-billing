@@ -9,7 +9,7 @@ import { Pago, PagosDocument } from './entities/pago.entity';
 
 @Injectable()
 export class PagosService {
-  constructor(@InjectModel(Pago.name) private pagosModel: Model<PagosDocument>) { }
+  constructor(@InjectModel(Pago.name) private pagosModel: Model<PagosDocument>) {}
 
   async registerPayment(registerData: CreatePagoDto): Promise<Pago> {
     try {

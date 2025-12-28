@@ -1,4 +1,4 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 export type BrandDocument = Brand & Document;
@@ -7,4 +7,3 @@ export type BrandDocument = Brand & Document;
 export class Brand extends Document {}
 
 export const BrandSchema = SchemaFactory.createForClass(Brand);
-

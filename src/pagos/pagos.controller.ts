@@ -9,12 +9,8 @@ export class PagosController {
 
   @Post()
   registerPayment(@Body() registerData: CreatePagoDto) {
-    try {
-      const registedPayment = this.pagosService.registerPayment(registerData);
-      return registedPayment;
-    } catch (error) {
-      throw error;
-    }
+    const registedPayment = this.pagosService.registerPayment(registerData);
+    return registedPayment;
   }
 
   @Get()
