@@ -9,9 +9,9 @@ export class PlanesController {
   constructor(private readonly planesService: PlanesService) {}
 
   @Post()
-  create(@Body() createPlaneDto: CreatePlanDto) {
+  createNewPlan(@Body() createData: CreatePlanDto) {
     try {
-      const createdPlan = this.planesService.createPlan(createPlaneDto);
+      const createdPlan = this.planesService.createPlan(createData);
       return createdPlan;
     } catch (error) {
       throw error;
@@ -19,32 +19,59 @@ export class PlanesController {
   }
 
   @Get()
-  findAll() {
-    return this.planesService.findAll();
+  findAllPlans() {
+    try {
+      return this.planesService.findAllPlans();
+    } catch (error) {
+      throw error;
+    }
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.planesService.findOne(id);
+  @Get(':planId')
+  findPlan(@Param('planId') id: string) {
+    try {
+      return this.planesService.findPlanById(id);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePlaneDto: UpdatePlanDto) {
-    return this.planesService.update(id, updatePlaneDto);
+  updatePlan(
+    @Param('id') id: string,
+    @Body() updatePlaneDto: UpdatePlanDto
+  ) {
+    try {
+      return this.planesService.findAndUpdateById(id, updatePlaneDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Delete("all")
-  removeAll() {
-    return this.planesService.removeAll();
+  removeAllPlans() {
+    try {
+      return this.planesService.removeAllPlans();
+    } catch (error) {
+      throw error;
+    }
   }
 
-  @Delete('delete')
-  removeMany(@Body() body: DeletePlanDto) {
-    return this.planesService.removeMany(body.ids);
+  @Delete("deleteMany")
+  removeManyPlans(@Body() planIds: string[]) {
+    try {
+      return this.planesService.removeManyPlansById(planIds);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.planesService.remove(id);
+  @Delete(':planId')
+  removePlan(@Param('planId') planId: string) {
+    try {
+      return this.planesService.removePlanById(planId);
+    } catch (error) {
+      throw error;
+    }
   }
 }

@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, BadRequestException } from '@nestjs/common';
 import { SuscripcionesService } from './suscripciones.service';
 import { CreateSuscripcionDto } from './dto/create-suscripcion.dto';
+import { UpdateSuscripcionDto } from './dto/update-suscripcion.dto';
 
 @Controller('suscripciones')
 export class SuscripcionesController {
@@ -36,45 +37,44 @@ export class SuscripcionesController {
     }
   }
 
-  // @Get("query")
-  // findSuscription(
-  //   @Query("planId") planId?: string,
-  //   @Query("brandId") brandId?: string
-  // ) {
-  //   try {
-  //     if (planId && brandId) {
-  //       throw new BadRequestException({
-  //         status: 400,
-  //         message: "Debe proporcionar solo una de estos: planId o brandId",
-  //         error: "Bad request"
-  //       });
-  //     }
-  //     if (planId) {
-  //       return this.suscService.getSuscriptionByPlanId(planId);
-  //     }
+  @Patch(":suscriptionId")
+  updateSuscription(
+    @Param("suscriptionId") suscId: string,
+    @Body() updateData: UpdateSuscripcionDto
+  ) {
+    try {
+      return this.suscService.findAndUpdateSuscriptionById(
+        suscId,
+        updateData
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
 
-  //     if (brandId) {
-  //       return this.suscService.getSuscriptionByBrandId(brandId);
-  //     }
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+  @Delete("all")
+  removeAllSuscriptions(
+    @Query("planId") planId?: string,
+    @Query("brandId") brandId?: string,
+  ) {
+    try {
+      return this.suscService.removeAllSuscriptions(
+        planId,
+        brandId
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
 
-  // @Post()
-  // create(@Body() createSuscripcioneDto: CreateSuscripcioneDto) {
-  //   return this.suscripcionesService.create(createSuscripcioneDto);
-  // }
-
-  // @Get()
-  // findAll() {
-  //   return this.suscripcionesService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.suscripcionesService.findOne(+id);
-  // }
+  @Delete(":suscriptionId")
+  removeSuscription(@Param("suscriptionId") suscId: string) {
+    try {
+      return this.suscService.removeSuscriptionById(suscId);
+    } catch (error) {
+      throw error;
+    }
+  }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateSuscripcioneDto: UpdateSuscripcioneDto) {

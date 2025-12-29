@@ -2,9 +2,10 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { CreateSuscripcionDto } from './dto/create-suscripcion.dto';
 
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from "mongoose";
+import { DeleteResult, Model, Types } from "mongoose";
 
 import { Suscripcion, SuscripcionDocument } from './entities/suscripcion.entity';
+import { UpdateSuscripcionDto } from './dto/update-suscripcion.dto';
 
 @Injectable()
 export class SuscripcionesService {
@@ -97,23 +98,106 @@ export class SuscripcionesService {
     return foundSuscription;
   }
 
-  // create(createSuscripcioneDto: CreateSuscripcioneDto) {
-  //   return 'This action adds a new suscripcione';
-  // }
+  async findAndUpdateSuscriptionById(
+    suscriptionId: string,
+    updateData: UpdateSuscripcionDto
+  ): Promise<Suscripcion> {
+    if (!Types.ObjectId.isValid(suscriptionId)) {
+      throw new NotFoundException({
+        status: 404,
+        message: `No se pudo encontrar la suscripción del id '${suscriptionId}' y por ende no se puede actualizar...`,
+        error: "Not found"
+      });
+    }
 
-  // findAll() {
-  //   return `This action returns all suscripciones`;
-  // }
+    const updatedSuscription = await this.suscModel
+      .findByIdAndUpdate(
+        suscriptionId,
+        updateData,
+        { new: true }
+      )
+      .exec();
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} suscripcione`;
-  // }
+    if (!updatedSuscription) {
+      throw new NotFoundException({
+        status: 404,
+        message: `No se pudo encontrar la suscripción del id '${suscriptionId}' y por ende no se puede actualizar...`,
+        error: "Not found"
+      });
+    }
+    return updatedSuscription;
+  }
 
-  // update(id: number, updateSuscripcioneDto: UpdateSuscripcioneDto) {
-  //   return `This action updates a #${id} suscripcione`;
-  // }
+  async removeAllSuscriptions(
+    planId?: string,
+    brandId?: string
+  ): Promise<DeleteResult> {
+    if (brandId) return await this.removeSuscriptionsByBrandId(brandId);
+    if (planId) return await this.removeSuscriptionsByPlanId(planId);
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} suscripcione`;
-  // }
+    const deletedResult = await this.suscModel
+      .deleteMany()
+      .exec();
+
+    if (!deletedResult) {
+      throw new NotFoundException({
+        status: 404,
+        message: "No se pudo encontrar ninguna suscripción, por ende no hay nada que borrar",
+        error: "Not found"
+      });
+    }
+    return deletedResult;
+  }
+
+  async removeSuscriptionById(suscId: string): Promise<Suscripcion> {
+    if (!Types.ObjectId.isValid(suscId)) {
+      throw new NotFoundException({
+        status: 404,
+        message: `No se pudo encontrar la suscripción con id '${suscId}' y por ende no se puede eliminar...`,
+        error: "Not found"
+      });
+    }
+
+    const removedSuscription = await this.suscModel
+      .findByIdAndDelete(suscId)
+      .exec();
+
+    if (!removedSuscription) {
+      throw new NotFoundException({
+        status: 404,
+        message: `No se pudo encontrar la suscripción con id '${suscId}' y por ende no se puede eliminar...`,
+        error: "Not found"
+      });
+    }
+    return removedSuscription;
+  }
+
+  async removeSuscriptionsByPlanId(planId: string) {
+    const deletedResult = await this.suscModel.deleteMany({
+      planId
+    });
+
+    if (!deletedResult) {
+      throw new NotFoundException({
+        status: 404,
+        message: `No se pudo encontrar ninguna suscripción con el planId ${planId}, por ende no hay nada que borrar`,
+        error: "Not found"
+      });
+    }
+    return deletedResult;
+  }
+
+  async removeSuscriptionsByBrandId(brandId: string): Promise<DeleteResult> {
+    const deletedResult = await this.suscModel.deleteMany({
+      brandId
+    });
+    if (!deletedResult) {
+      throw new NotFoundException({
+        status: 404,
+        message: `No se pudo encontrar ninguna suscripción con el brandId ${brandId}, por ende no hay nada que borrar`,
+        error: "Not found"
+      });
+    }
+    return deletedResult;
+  }
 }
