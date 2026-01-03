@@ -6,7 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from "mongoose";
 
 import { Pago, PagosDocument } from './entities/pago.entity';
-import { DeletePaymentResponse } from 'src/types/reponses';
+import { DeletePaymentResponse, ResponseGeneral } from 'src/types/reponses';
 import { CloudinaryService } from 'src/core/cloudinary/image.service';
 
 @Injectable()
@@ -132,5 +132,25 @@ export class PagosService {
       { voucher_pago: voucherPhotoUrl }
     );
     return updatedPayment;
+  }
+
+  async deleteVoucher(paymentId: string): Promise<ResponseGeneral> {
+    const { voucher_pago } = await this.findPaymentById(paymentId);
+    
+    if (!voucher_pago || voucher_pago === "") {
+      throw new NotFoundException({
+        status: 404,
+        message: "No se pudo encontrar el voucher",
+        error: "Not found voucher"
+      })
+    }
+    
+    await this.cloudinaryService.deleteImage(voucher_pago);
+    await this.findAndUpdateById(
+      paymentId,
+      { voucher_pago: null }
+    );
+
+    return { success: true, message: "Voucher eliminado exitosamente" }
   }
 }

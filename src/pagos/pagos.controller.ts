@@ -1,43 +1,44 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { PagosService } from './pagos.service';
 import { CreatePagoDto } from './dto/create-pago.dto';
 import { UpdatePagoDto } from './dto/update-pago.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('pagos')
 export class PagosController {
   constructor(private readonly pagosService: PagosService) { }
 
   @Post()
-  registerPayment(@Body() registerData: CreatePagoDto) {
-    const registedPayment = this.pagosService.registerPayment(registerData);
+  async registerPayment(@Body() registerData: CreatePagoDto) {
+    const registedPayment = await this.pagosService.registerPayment(registerData);
     return registedPayment;
   }
 
   @Get()
-  findAllPayment() {
+  async findAllPayment() {
     try {
-      return this.pagosService.findAllPayments();
+      return await this.pagosService.findAllPayments();
     } catch (error) {
       throw error;
     }
   }
 
   @Get(":paymentId")
-  findPayment(@Param("paymentId") paymentId: string) {
+  async findPayment(@Param("paymentId") paymentId: string) {
     try {
-      return this.pagosService.findPaymentById(paymentId);
+      return await this.pagosService.findPaymentById(paymentId);
     } catch (error) {
       throw error;
     }
   }
 
   @Patch(":paymentId")
-  updatePayment(
+  async updatePayment(
     @Param("paymentId") paymentId: string,
     @Body() updatePagoDto: UpdatePagoDto
   ) {
     try {
-      return this.pagosService.findAndUpdateById(
+      return await this.pagosService.findAndUpdateById(
         paymentId,
         updatePagoDto
       );
@@ -46,19 +47,45 @@ export class PagosController {
     }
   }
 
-  @Delete("all")
-  removeAllPayments() {
+  @Patch(":paymentId/upload-voucher")
+  @UseInterceptors(FileInterceptor("voucher"))
+  async uploadVoucherPayment(
+    @Param("paymentId") paymentId: string,
+    @UploadedFile() voucherFile: Express.Multer.File
+  ) {
     try {
-      return this.pagosService.removeAllPayments();
+      const paymentWithVoucher = await this.pagosService.uploadVoucherPayment(
+        paymentId,
+        voucherFile
+      );
+      return paymentWithVoucher;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Delete(":paymentId/delete-voucher")
+  async deleteVoucher(@Param("paymentId") paymentId: string) {
+    try {
+      return await this.pagosService.deleteVoucher(paymentId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Delete("all")
+  async removeAllPayments() {
+    try {
+      return await this.pagosService.removeAllPayments();
     } catch (error) {
       throw error;
     }
   }
 
   @Delete(":paymentId")
-  removePayment(@Param("paymentId") paymentId: string) {
+  async removePayment(@Param("paymentId") paymentId: string) {
     try {
-      return this.pagosService.removePaymentById(paymentId);
+      return await this.pagosService.removePaymentById(paymentId);
     } catch (error) {
       throw error;
     }

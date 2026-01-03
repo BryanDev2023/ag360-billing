@@ -36,8 +36,11 @@ export class Pago extends Document {
   @Prop({ type: String })
   pago_link: string;
 
-  @Prop({ type: String })
-  voucher_pago: string;
+  @Prop({
+    type: String || null,
+    default: ""
+  })
+  voucher_pago: string | null;
 
   @Prop({ type: [String] })
   notas: string[]

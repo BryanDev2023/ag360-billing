@@ -9,3 +9,8 @@ export interface DeletePaymentResponse {
   message: string | string[];
   deletedCount: number;
 }
+
+export interface ResponseGeneral {
+  success: boolean;
+  message: string;
+}

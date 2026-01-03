@@ -35,7 +35,7 @@ export class CreatePagoDto {
 
   @IsString()
   @IsOptional()
-  voucher_pago: string;
+  voucher_pago: string | null;
 
   @IsArray()
   @IsString({ each: true })
