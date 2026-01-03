@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
-import config from './config/environment';
+import config from './core/config/environment';
 import { send } from 'process';
 
 async function bootstrap() {

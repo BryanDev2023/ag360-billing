@@ -7,10 +7,14 @@ import { Model, Types } from "mongoose";
 
 import { Pago, PagosDocument } from './entities/pago.entity';
 import { DeletePaymentResponse } from 'src/types/reponses';
+import { CloudinaryService } from 'src/core/cloudinary/image.service';
 
 @Injectable()
 export class PagosService {
-  constructor(@InjectModel(Pago.name) private pagosModel: Model<PagosDocument>) {}
+  constructor(
+    @InjectModel(Pago.name) private readonly pagosModel: Model<PagosDocument>,
+    private readonly cloudinaryService: CloudinaryService
+  ) {}
 
   async registerPayment(registerData: CreatePagoDto): Promise<Pago> {
     try {
@@ -117,25 +121,16 @@ export class PagosService {
     }
     return resultSuccesfully;
   }
+
+  async uploadVoucherPayment(
+    paymentId: string,
+    voucherFile: Express.Multer.File
+  ): Promise<Pago> {
+    const voucherPhotoUrl = await this.cloudinaryService.uploadImage(voucherFile);
+    const updatedPayment = await  this.findAndUpdateById(
+      paymentId,
+      { voucher_pago: voucherPhotoUrl }
+    );
+    return updatedPayment;
+  }
 }
-// export class PagosService {
-//   create(createPagoDto: CreatePagoDto) {
-//     return 'This action adds a new pago';
-//   }
-
-//   findAll() {
-//     return `This action returns all pagos`;
-//   }
-
-//   findOne(id: number) {
-//     return `This action returns a #${id} pago`;
-//   }
-
-//   update(id: number, updatePagoDto: UpdatePagoDto) {
-//     return `This action updates a #${id} pago`;
-//   }
-
-//   remove(id: number) {
-//     return `This action removes a #${id} pago`;
-//   }
-// }

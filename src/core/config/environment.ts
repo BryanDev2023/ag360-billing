@@ -17,7 +17,12 @@ const envSchema = z.object({
 
   // URLS
   BASE_URL: z.string(),
-  PANEL_ADMIN_URL: z.string()
+  PANEL_ADMIN_URL: z.string(),
+
+  // CLOUDINARY
+  CLOUDINARY_CLOUD_NAME: z.string(),
+  CLOUDINARY_API_KEY: z.string(),
+  CLOUDINARY_API_SECRET: z.string(),
 });
 
 const env = envSchema.safeParse(process.env!);
@@ -37,7 +42,12 @@ const config = {
 
   // Urls
   baseUrl: env.data.BASE_URL,
-  panelAdmin: env.data.PANEL_ADMIN_URL
+  panelAdmin: env.data.PANEL_ADMIN_URL,
+
+  // Cloudinary
+  cloudinaryCloudName: env.data.CLOUDINARY_CLOUD_NAME,
+  cloudinaryApiKey: env.data.CLOUDINARY_API_KEY,
+  cloudinaryApiSecret: env.data.CLOUDINARY_API_SECRET,
 }
 
 export default config;
