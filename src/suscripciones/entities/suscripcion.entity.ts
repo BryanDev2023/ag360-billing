@@ -36,6 +36,19 @@ export class Suscripcion extends Document {
 
   @Prop({
     type: String,
+    enum: ["transferencia", "billetera_digital", "pago_link"],
+    required: true
+  })
+  tipo_pago: string;
+
+  @Prop({
+    type: String,
+    required: true
+  })
+  provider: string;
+
+  @Prop({
+    type: String,
     enum: ["activo", "inactivo"],
     default: "activo",
     required: true

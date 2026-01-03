@@ -27,16 +27,10 @@ export class Pago extends Document {
   })
   tipo_pago: string;
 
-  @Prop({
-    type: String,
-    enum: ["bcp", "interbank"],
-  })
+  @Prop({ type: String })
   transferencia: string;
 
-  @Prop({
-    type: String,
-    enum: ["yape", "plin"],
-  })
+  @Prop({ type: String })
   billetera_digital: string;
 
   @Prop({ type: String })

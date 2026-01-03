@@ -9,8 +9,12 @@ export class SuscripcionesController {
 
   @Post()
   suscribeToPlan(@Body() suscripcionData: CreateSuscripcionDto) {
-    const createdSuscription = this.suscService.createSuscriptionToPlan(suscripcionData);
-    return createdSuscription;
+    try {
+      const createdSuscription = this.suscService.createSuscriptionToPlan(suscripcionData);
+      return createdSuscription;
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Get()

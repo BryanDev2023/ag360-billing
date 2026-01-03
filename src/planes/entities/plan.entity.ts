@@ -19,7 +19,7 @@ export class Plan extends Document  {
   @Prop({
     required: true,
     type: String,
-    enum: ['monthly', 'annual', 'quarter', 'semester'],
+    enum: ['monthly', 'annual', 'quarter', 'semester', 'biweekly'],
     default: "monthly"
   })
   duration: string;

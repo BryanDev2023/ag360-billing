@@ -20,12 +20,12 @@ export class CreatePagoDto {
 
   @ValidateIf((o) => o.tipo_pago === "transferencia")
   @IsNotEmpty({ message: "transferencia es requerida cuando tipo_pago es 'transferencia'" })
-  @IsEnum(["bcp", "interbank"])
+  @IsString()
   transferencia?: string;
 
   @ValidateIf((o) => o.tipo_pago === "billetera_digital")
   @IsNotEmpty({ message: "billetera_digital es requerida cuanto tipo_pago es 'billetera_digital'" })
-  @IsEnum(["yape", "plin"])
+  @IsString()
   billetera_digital: string;
 
   @ValidateIf((o) => o.tipo_pago === "pago_link")
